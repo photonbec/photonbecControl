@@ -5,18 +5,17 @@ import time
 import numpy as np
 #from scipy.misc import imsave
 
-camera_id = 'blackfly_minisetup'
+#camera_id = 'blackfly_minisetup'
 
-#camera_id = 'grasshopper'
+camera_id ='blackfly_semiconductor_cavity_lock'
 
-
+#camera_id = 'blackfly_semiconductor_cavity'
 
 
 ######################### Gets a single frame
 '''
 camera = CameraUSB3(verbose=True, camera_id=camera_id, timeout=1000, acquisition_mode='single frame')
 frame = camera.get_image()
-print(frame)
 '''
 
 
@@ -50,7 +49,7 @@ camera.end_acquisition()
 
 ######################### Tests frame acquisition rate in continuous mode
 
-camera = CameraUSB3(verbose=True, camera_id=camera_id, timeout=1000, acquisition_mode='continuous',colour=True)
+camera = CameraUSB3(verbose=True, camera_id=camera_id, timeout=1000, acquisition_mode='continuous')
 print('\n\nTesting camera acquisition rate:')
 n_frames = 100
 frames = list()
@@ -66,10 +65,7 @@ delta_t = times[1:] - times[:-1]
 delta_t_average = np.average(delta_t)
 frame_rate = 1.0 / delta_t_average
 print('\n Average acquisition rate is {0} frames/s\n\n'.format(int(frame_rate)))
-image=frames[0]
-
-plt.imshow(image)
-plt.colorbar()
+plt.imshow(frames[0])
 plt.show()
 
 

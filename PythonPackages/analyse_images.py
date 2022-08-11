@@ -2,7 +2,7 @@
 #execfile("analyse_images.py")
 from pbec_analysis import *
 from scipy.optimize import leastsq
-
+from scipy.misc import imsave
 
 #Tools for fitting images
 

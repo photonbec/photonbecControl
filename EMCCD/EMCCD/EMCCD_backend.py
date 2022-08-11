@@ -14,8 +14,6 @@ import time
 ########## Parameters
 if socket.gethostname() == "ph-photonbec5":
 	dll_file = r"D:\Control\EMCCD\atmcd32d.dll"
-elif socket.gethostname() == "ph-photonbec3":
-	dll_file = r"D:\Control\EMCCD\atmcd32d.dll"
 
 
 class EMCCD():

@@ -3,12 +3,11 @@
 import socket
 import sys
 
-if socket.gethostname() == 'ph-photonbec3':
-	sys.path.append("D:\\Control\\PythonPackages\\")
-elif socket.gethostname() == 'ph-photonbec5':
+if socket.gethostname() == 'ph-photonbec5':
 	sys.path.append("D:\\Control\\PythonPackages\\")
 else:
 	raise Exception('Unknown machine')
+
 
 #ipython --gui=qt
 #exec(open("main.py").read())

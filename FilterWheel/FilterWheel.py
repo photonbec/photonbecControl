@@ -101,7 +101,7 @@ class FilterWheel():
 		if reset_filter_wheel_flag is True:
 			self.reset_filter_wheel() 
 			
-		#status = self.get_current_status()
+		status = self.get_current_status()
 		reply = ct.create_string_buffer(b'', 255)
 		status = self.estabilish_communication(self.dll.fnUART_LIBRARY_Get, ct.create_string_buffer(b'*idn?\r'), reply)
 		#status = self.dll.fnUART_LIBRARY_Get(ct.create_string_buffer(b'*idn?\r'), reply)

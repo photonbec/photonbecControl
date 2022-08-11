@@ -52,5 +52,5 @@ def GetAI0(Npts=2,avg=True):
 		return mean(data)
 	else:
 		return data
-	#RCS 01/2022 - You might need to put this in a list to make it compatible with the dataset functions.
+
 #EOF

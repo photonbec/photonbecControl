@@ -14,10 +14,8 @@ import SingleChannelAO
 
 import socket
 
-if socket.gethostname() == 'ph-photonbec3':
+if socket.gethostname() == 'ph-photonbec5':
 	device = 'Dev1'
-elif socket.gethostname() == 'ph-photonbec5':
-	device = 'Dev2'
 else:
 	raise Exception('Unknown machine')
 

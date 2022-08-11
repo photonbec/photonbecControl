@@ -16,7 +16,7 @@ def cam_get_image(cam, max_attempts=5, verbose=False):
 	if verbose: print (shutter_extra_wait)
 	for i in range(max_attempts):
 		if verbose: 
-			print("cam_get_image: attempt #"+str(i+1)+"...",)
+			print "cam_get_image: attempt #"+str(i+1)+"...",
 		#im = cam.get_image_now(verbose=verbose) #software triggered
 		sleep(2*shutter + extra_wait) #manually added wait to be used with un-triggered acquisition
 		im = cam.get_image(verbose=verbose) #untriggered
@@ -42,7 +42,7 @@ def get_single_autoexposed_image(cameraLabel, shutter=64., gain=0, min_shutter= 
 	while (count<max_iter) & ((maxval < min_acceptable_value) or (maxval > max_acceptable_value)):
 		count +=1
 		if verbose: 
-			print("setting shutter and gain to "+str((shutter,gain)),)
+			print "setting shutter and gain to "+str((shutter,gain)),
 		c.set_property('shutter', shutter)
 		c.set_property('gain', gain)
 		dump = c.get_image() #clear the camera sensor
@@ -55,9 +55,9 @@ def get_single_autoexposed_image(cameraLabel, shutter=64., gain=0, min_shutter= 
 		maxval= subim[subim_maxloc]
 
 		res = {"shutter": shutter, "gain": gain, "maxval": maxval, "Niter":count}
-		if verbose:print("maxval = "+str(maxval))#+"\t Binned-image location "+str(subim_maxloc))
+		if verbose: print "maxval = "+str(maxval)#+"\t Binned-image location "+str(subim_maxloc)
 		#Logic: it's better to have long shutter than high gain, because that's the lowest noise option
-		if maxval > max_acceptable_value:
+		if maxval>max_acceptable_value:
 			#first try reducing the gain
 			gain = gain - gain_increment
 			if gain < min_gain:
@@ -65,7 +65,7 @@ def get_single_autoexposed_image(cameraLabel, shutter=64., gain=0, min_shutter= 
 				shutter = shutter / shutter_factor
 				if shutter < min_shutter:
 					shutter = min_shutter
-					if verbose: print("Can't go lower!")
+					if verbose: print "Can't go lower!"
 					break
 		elif maxval<min_acceptable_value:
 			#first try increasing the shutter
@@ -75,7 +75,7 @@ def get_single_autoexposed_image(cameraLabel, shutter=64., gain=0, min_shutter= 
 				gain = gain + gain_increment
 				if gain > max_gain:
 					gain = max_gain
-					if verbose: print("Can't go higher!")
+					if verbose: print "Can't go higher!"
 					break
 		#
 	c.close()

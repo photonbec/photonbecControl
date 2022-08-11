@@ -23,7 +23,7 @@ def find_freq_from_autocorrelation(t_axis, data, verbose=False):
 	maxima = argrelmax(ac)[0]
 	maxima_midplus = [m for m in maxima if m>len(data)/2 - 1]
 	if verbose:
-		if len(maxima_midplus) < 2: print('failed finding freq')
+		if len(maxima_midplus) < 2: print 'failed finding freq'
 	#
 	if plot_graphs:
 		plt.figure('autocorrelation'), plt.clf()
@@ -92,9 +92,8 @@ def calc_visibility_fourier(signal, axis=0, ratio_freq=0, f_search_range = 0.04,
 				vis=0
 			visibilities.append(vis)
 	else:
-		print("calc_vfisibility_fourier was not built this way round: change the axe)s!")
+		print "calc_vfisibility_fourier was not built this way round: change the axes!"
 		visibilities = [None]
-		#visibilities = None
 	return visibilities
 
 def colour_to_monochrome(im, colour_weights=colour_weights):
@@ -160,7 +159,7 @@ def image_q_shift(q_im, x, y, a):
 	return q_im_t
 
 def find_origin_image_shift(origin_ts, show_debug_graphs = False):
-	print('finding origin')
+	print 'finding origin'
 	oexp = pbeca.ExperimentalDataSet(origin_ts)
 	oexp.dataset['block_p_image'] = pbeca.CameraData(oexp.ts, '_block_p_image.png')
 	oexp.dataset['block_q_image'] = pbeca.CameraData(oexp.ts, '_block_q_image.png')
@@ -196,8 +195,8 @@ def find_origin_image_shift(origin_ts, show_debug_graphs = False):
 	guess = (0, 0, 1)
 	lsfit = leastsq(image_difference_residuals, guess, (ravel(p_im), ravel(q_im), p_im.shape, q_im.shape), epsfcn=1.0)
 	x, y, a = lsfit[0]
-	print('p to q shift = (%f, %f) amplitude shift = %f' % (x, y, a))
-	print('imgdiff = ' + str(image_difference(p_im, q_im, x, y, a)))
+	print 'p to q shift = (%f, %f) amplitude shift = %f' % (x, y, a)
+	print 'imgdiff = ' + str(image_difference(p_im, q_im, x, y, a))
 
 	def shiftims(x, y, a):
 		figure('shifted image quadratures' + str((x, y))), clf()
@@ -283,7 +282,7 @@ def load_zc_fringes(origin_image_shift, ts_list, binning, subtract_background=Fa
 		oexperiment.dataset['q_fringes'].data = array([
 			bin_image(crop(image_q_shift(colour_to_monochrome(remove_background(im, background_im)), shiftx, shifty, ampshift), fromY, toY, fromX, toX),binning=binning)
 			for im in oexperiment.dataset['q_fringes'].data])
-	print(' done')
+	print ' done'
 
 	p_image_data = array([oexperiment.dataset['p_fringes'].data for oexperiment in oexperiment_list])
 	q_image_data = array([oexperiment.dataset['q_fringes'].data for oexperiment in oexperiment_list])
@@ -306,10 +305,10 @@ def create_visibility_images(signal, image_dims, ratio_freq=0):
 	height = image_dims[3]
 	visibility_images_through_parameter = zeros((signal.shape[0], width, height))
 	for i in range(width):
-		print(str(i)+"...",)
+		print str(i)+"...",
 		for j in range(height):
 			visibility_images_through_parameter[:,i,j] = array(calc_visibility_fourier(signal[:, :, i+image_dims[0], j+image_dims[1]], axis=1, ratio_freq=ratio_freq))
-	print("...done")
+	print "...done"
 	return visibility_images_through_parameter
 #
 # 2D GAUSSIAN FITTING
@@ -320,16 +319,15 @@ def gaussian_2d_asymmetric(x,y, amp, mu_x, mu_y, sigma_x, sigma_y, off):
     exp_fac = exp(-expo)
     return amp*exp_fac + off
 
-#def gaussian_2d_asymmetric_residuals(pars, (xvals, yvals), data):
-def gaussian_2d_asymmetric_residuals(pars, xvals, yvals, data):
+def gaussian_2d_asymmetric_residuals(pars, (xvals, yvals), data):
     #fits in a linear scale. Could consider log scale
-    resid = (gaussian_2d_asymmetric(xvals,yvals, *pars) - data)**2
+    resid = ( gaussian_2d_asymmetric(xvals,yvals, *pars) - data)**2
     return resid.reshape(-1) #leastsq needs a 1D array
 
 default_guess = (0.5, 0, 0, 1, 1, 0.1) #amp, mu_x, mu_y, sigma_x, sigma_y, off
 def fit_gaussian_2d_asymmetric(xaxis, yaxis, visibilities, residuals_func = gaussian_2d_asymmetric_residuals, guess = default_guess):
     XX, YY = meshgrid(xaxis, yaxis) #assumes data is on a separable grid
-    fit, dump = leastsq(residuals_func, guess, ((XX, YY), visibilities))
+    (fit,dump) = leastsq(residuals_func, guess, ((XX, YY), visibilities))
     (amp, mu_x, mu_y, sigma_x, sigma_y, off) = fit
     return fit
 
@@ -344,9 +342,8 @@ def gaussian_2d_rotated(x,y, amp, mu_x, mu_y, sigma_x, sigma_y, off, theta):
     exp_fac = exp(-expo)
     return amp*exp_fac + off
 
-#def gaussian_2d_rotated_residuals(pars, (xvals, yvals), data):
-def gaussian_2d_rotated_residuals(pars, xvals, yvals, data):
-	#fits in a linear scale. Could consider log scale
+def gaussian_2d_rotated_residuals(pars, (xvals, yvals), data):
+    #fits in a linear scale. Could consider log scale
     resid = ( gaussian_2d_rotated(xvals,yvals, *pars) - data)**2
     return resid.reshape(-1) #leastsq needs a 1D array
 

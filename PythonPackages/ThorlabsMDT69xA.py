@@ -11,8 +11,8 @@ elif gethostname()=="ph-photonbec2":
 	default_Nchannels=1
 	comports={"3chan":4,"1chan":4}
 elif gethostname()=="ph-photonbec3":
-    comports={"3chan":2,"1chan":6}
-    default_Nchannels=1
+    comports={"3chan":2,"1chan":4}
+    default_Nchannels=3
 elif gethostname()=="ph-photonbec5":
     comports={"3chan":4+1,"1chan":4}
     #print("\n\n\n\n Note: COM Port for single channel PZT driver not yet specified for ph-photonbec5 \n\n\n\n")
@@ -30,11 +30,11 @@ class ThorlabsMDT69xA():
         if Nchannels not in [1, 3]:
                 print("Unknown number of channels. Try again with either 3 or 1")
         chan_name = str(Nchannels)+"chan"
-        self.comport = comports[chan_name]#for COM<x> set comport = <x>-1 - WHY???? I've removed this functionality.
+        self.comport = comports[chan_name]#for COM<x> set comport = <x>-1
         self.model_number = model_numbers[chan_name]
         baud_rate = baud_rates[chan_name]
         self.keep_open = keep_open
-        self.ser = serial.Serial(port='COM'+str(self.comport), timeout=5, baudrate=baud_rate)
+        self.ser = serial.Serial(port='COM'+str(self.comport-1), timeout=5, baudrate=baud_rate)
         if not self.keep_open:
             self.ser.close()
     def writeCommand(self,s):

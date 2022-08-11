@@ -3,21 +3,17 @@
 import sys, os, random
 from PyQt5 import QtCore, QtWidgets
 
-#from pylab import *
-
-
+from pylab import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from socket import gethostname
 from time import sleep
 from scipy.optimize import curve_fit
 import socket
-import numpy as np
-
 
 if socket.gethostname() == 'ph-photonbec3':
-	sys.path.append(r"D:\\Control\\PythonPackages\\")
-	sys.path.append(r"D:\\Control\CavityLock_minisetup")
+	sys.path.append(r"Y:\\Control\\PythonPackages\\")
+	sys.path.append(r"Y:\\Control\CavityLock_minisetup")
 elif socket.gethostname() == 'ph-photonbec5':
 	sys.path.append(r"D:\\Control\\PythonPackages\\")
 	sys.path.append(r"D:\\Control\CavityLock_minisetup")
@@ -60,7 +56,7 @@ class EmbeddedUpdatingGraph(FigureCanvas):
 		#self.axes211.set_xlabel("time (s since midnight)",fontsize=label_fontsize)
 		self.axes211.plot([-100,-10], [0,0])
 		self.axes211.set_ylabel("Control voltage (mV)",fontsize=label_fontsize)
-		self.axes211.set_ylim(1000*np.array(self.stabiliser.control_range))
+		self.axes211.set_ylim(1000*array(self.stabiliser.control_range))
 		#
 		self.axes212.plot([-100,-10], [0,0])
 		self.axes212.set_xlabel("time (s since midnight)",fontsize=label_fontsize)
@@ -98,7 +94,7 @@ class EmbeddedUpdatingGraph(FigureCanvas):
 
 		try:
 			if min(float_vouts) == max(float_vouts):
-				self.axes211.set_ylim(1000*np.array(self.stabiliser.control_range))
+				self.axes211.set_ylim(1000*array(self.stabiliser.control_range))
 			else:
 				self.axes211.set_ylim(min(float_vouts), max(float_vouts))
 			self.axes211.set_xlim(min(time_numbers), max(time_numbers))
@@ -108,8 +104,8 @@ class EmbeddedUpdatingGraph(FigureCanvas):
 			pass
 		self.draw()
 
-		# self.axes211.lines = []
-		# self.axes212.lines = []
+		self.axes211.lines = []
+		self.axes212.lines = []
 
 
 
@@ -131,7 +127,7 @@ class DisplayCameraImageCanvas(FigureCanvas):
 		#Now, display some data
 		self.im_raw = self.stabiliser.im_raw #parent is aw.popup, aw.popup.parent is aw, aw.stabiliser is stabiliser object
 		
-		self.axesImage = self.axes.axes.imshow(self.im_raw[:])#,colorbar()
+		self.axesImage = self.axes.axes.imshow(self.im_raw[:,:],cmap=cm.gray)#,colorbar()
 		cb = self.fig.colorbar(self.axesImage)
 
 
@@ -275,7 +271,7 @@ class ApplicationWindow(QtWidgets.QWidget):
 		#The labels on these buttons should change once they've been pushed
 		self.start_stop_acquisition_button=QtWidgets.QPushButton("Start\nAcquisition")
 		self.start_stop_lock_button=QtWidgets.QPushButton("Start\nLock")
-		self.reset_button=QtWidgets.QPushButton("Reset lock;\nOutput to "+str(np.mean(stabiliser.control_range))+" V")
+		self.reset_button=QtWidgets.QPushButton("Reset lock;\nOutput to "+str(mean(stabiliser.control_range))+" V")
 		self.stop_go_hbox.addWidget(self.start_stop_acquisition_button)
 		self.stop_go_hbox.addWidget(self.start_stop_lock_button)
 		self.stop_go_hbox.addWidget(self.reset_button)

@@ -1384,6 +1384,40 @@ def LaserOptikMirrorTransmission(interpolated_wavelengths,refractive_index = "10
 	
 	return interpolated_transmissions
 
+def Sheffield_PR0181(interpolated_wavelengths,refractive_index = "100", shift_spectrum=0,rescale_factor=1):
+	"""
+	Can be used for any wavelengths in the range 600--1200??? UNITS: nm)
+	Uses data from Toby taken 10th March 2022
+	Interpolate over selected wavelengths: returns a function which takes wavelength (nm) as argument
+	Shifts transmission spectrum with calibration still to come, likewise for "rescale_factor"
+	"refractive_index" argument is only for backwards compatibility
+	"""
+	reflectivity_folder = data_root_folder + folder_separator+ "calibration_data" + folder_separator
+	#reflectivity_folder = "./"
+	reflectivity_filename = "LaserOptik20160129_Theorie_T.DAT"
+
+	fname = reflectivity_folder+reflectivity_filename
+	res = csv.reader(open(fname), delimiter='\t')
+	refl_text = [x for x in res][1:] #removes column headings
+
+	original_wavelengths = array([float(l[0]) for l in refl_text])
+	original_transmissions = array([float(l[1]) for l in refl_text])
+	###original_reflectivities = 1-original_transmissions
+	#
+	wavelength_shift = 0
+	if isinstance(shift_spectrum,Number):
+		wavelength_shift = shift_spectrum
+	#
+	interpolated_transmission_func = interp1d(original_wavelengths,original_transmissions)
+	interpolated_transmissions = interpolated_transmission_func(interpolated_wavelengths + wavelength_shift)
+	
+	#Transmission to be calibrated at at least one narrow wavelength
+	#Assume transmission scales with this factor at all wavelengths [not well justified assumption]
+	interpolated_transmissions = interpolated_transmissions / rescale_factor
+	
+	return interpolated_transmissions
+
+
 
 def getLambdaRange(lamb, fromL, toL):
 	lam = [(i,l) for (i,l) in enumerate(lamb) if (l>fromL) and (l<=toL)]

@@ -33,9 +33,9 @@ class PiezoControllerGUI(QtWidgets.QWidget):
 		
 		#self.grid.addWidget(QLabel(text), 2, i, 1, 1, QtCore.Qt.AlignHCenter)
 		
-		label_text = [ 'Cavity Length']
-		callbacks = [self.xSpinnerValueChanged]
-		get_value = [self.pzt_server.getXvolts]
+		label_text = ['Interferometer', 'Cavity Length', 'Unused Channel Z']
+		callbacks = [self.xSpinnerValueChanged, self.ySpinnerValueChanged, self.zSpinnerValueChanged]
+		get_value = [self.pzt_server.getXvolts, self.pzt_server.getYvolts, self.pzt_server.getZvolts]
 		self.spinners = []
 		for i, text in enumerate(label_text):
 			self.grid.addWidget(QtWidgets.QLabel(text), 2, i, 1, 1, QtCore.Qt.AlignHCenter)

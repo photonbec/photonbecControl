@@ -2,11 +2,9 @@
 
 #ipython
 #exec(open("agilent33521A.py").read())
-import pyvisa
 import pyvisa as visa
 import socket
 hostname = socket.gethostname()
-#default_AFG_name="USB0::2391::5639::MY50003870::0::INSTR" #This is listed in AFG settings.
 default_AFG_name="USB0::0x0957::0x1607::MY50003870"
 #default_AFG_name="USB\VID_0957&PID_1607\MY50003870"
 if hostname.lower()=="ph-photonbec":
@@ -18,7 +16,7 @@ elif hostname.lower()=="ph-photonbec2":
 	backend = ""
 	line_end=""
 elif hostname.lower()=="ph-photonbec3":
-	AFG_name = default_AFG_name+"::INSTR"
+	AFG_name = default_AFG_name
 	backend = ""
 	line_end=""
 elif hostname.lower()=="ph-photonbec5":
@@ -39,7 +37,6 @@ class AgilentFunctionGenerator():
 	the reader.
 	
 	NOTE: it seems to prefer being connected via USB2 not USB3.
-	NOTE: RS 02/22 - I don't know if it cares ^. Make sure NI-VISA is up-to-date.
 	"""
 	def __init__(self,USB_name=AFG_name):
 		#USB_name = USB_name
@@ -86,15 +83,15 @@ class AgilentFunctionGenerator():
 		self.setOutputPolarityInverted()
 		self.outputOn()
 	def getPulseWidth(self):
-		return self.agilent.query("FUNC:PULS:WIDT?"+line_end)
+		return self.agilent.ask("FUNC:PULS:WIDT?"+line_end)
 	def getFrequency(self):
-		return self.agilent.query("FREQ?"+line_end)
+		return self.agilent.ask("FREQ?"+line_end)
 	def setOutputPolarityNormal(self):
 		self.writeCommand("OUTP:POL NORM")
 	def setOutputPolarityInverted(self):
 		self.writeCommand("OUTP:POL INV")
 	def getOutputPolarity(self):
-		return self.agilent.query("OUTP:POL?"+line_end)
+		return self.agilent.ask("OUTP:POL?"+line_end)
 
 #TESTING
 """

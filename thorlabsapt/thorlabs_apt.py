@@ -49,28 +49,28 @@ class Header():
 		return {"message_ID":self.message_ID,"param1":self.param1,"param2":self.param2,"dest": self.dest,"source":self.source}
 	def printMe(self):
             d = self.dict()
-            print "Message: "+lookup_message(d["message_ID"])
+            print("Message: "+lookup_message(d["message_ID"]))
             for k in ["param1","param2","dest","source"]:
-                print k+"\t"+str(d[k])
+                print(k+"\t"+str(d[k]))
 		#Fix this to be more readable
 
 class HeaderWithData(Header):
-	#Message header format for messages with packet data, and the data too
-	#Message header format for messages with no packet data
-	def __init__(self, message_ID = 0, extra_format = "", extra_fields = (),
-			param1 = 0, param2 = 0, dest=0x50, source=0x01):
-		Header.__init__(self, message_ID, param1, param2, dest, source)
-		self.extra_format = extra_format
-		self.extra_fields = extra_fields
-	def packedHeader(self):	       
-	        logicked_dest = self.dest | 0x80 #means there is data
-                return struct.pack(self.message_format + self.extra_format, self.message_ID,
-			self.param1, self.param2, logicked_dest, self.source, *self.extra_fields)
-	def dict(self):
-		ret = Header.dict(self)
-		ret["extra_format"] = self.extra_format
-		ret["extra_fields"] = self.extra_fields
-		return ret
+    #Message header format for messages with packet data, and the data too
+    #Message header format for messages with no packet data
+    def __init__(self, message_ID = 0, extra_format = "", extra_fields = (),
+            param1 = 0, param2 = 0, dest=0x50, source=0x01):
+        Header.__init__(self, message_ID, param1, param2, dest, source)
+        self.extra_format = extra_format
+        self.extra_fields = extra_fields
+    def packedHeader(self):	       
+        logicked_dest = self.dest | 0x80 #means there is data
+        return struct.pack(self.message_format + self.extra_format, self.message_ID,
+            self.param1, self.param2, logicked_dest, self.source, *self.extra_fields)
+    def dict(self):
+        ret = Header.dict(self)
+        ret["extra_format"] = self.extra_format
+        ret["extra_fields"] = self.extra_fields
+        return ret
 
 #by the way, param1 refers to the length of the packet
 # i figured this out after coding pretty much all of this

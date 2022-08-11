@@ -79,7 +79,7 @@ class PlottingThread(QtCore.QThread):
 		self.canvas.axes.set_xticks([])
 		self.canvas.axes.set_yticks([])
 		self.canvas.show()
-		self.image = self.canvas.axes.imshow(np.zeros([512,512]))
+		self.image = self.canvas.axes.imshow(np.zeros([512,512]), cmap='gray')
 		self.lost_frames = 0
 
 	def get_timestamp(self):
@@ -99,7 +99,7 @@ class PlottingThread(QtCore.QThread):
 		self.canvas_big = canvas_big
 		self.canvas_big.axes.set_xticks([])
 		self.canvas_big.axes.set_yticks([])
-		self.image_big = self.canvas_big.axes.imshow(np.zeros([512,512]))
+		self.image_big = self.canvas_big.axes.imshow(np.zeros([512,512]), cmap='gray')
 
 	def load_canvas_hist(self, canvas_hist):
 		self.canvas_hist = canvas_hist
@@ -173,7 +173,6 @@ class PlottingThread(QtCore.QThread):
 					self.hist_hy.autoscale_view()
 
 			# Updates all plots
-			self.canvas.axes.imshow(data)
 			self.canvas.draw()
 			if not self.canvas_big is None:
 				self.canvas_big.draw()

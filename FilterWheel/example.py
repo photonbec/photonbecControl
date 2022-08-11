@@ -18,17 +18,17 @@ OD_setting['position 5'] = 3.0
 OD_setting['position 6'] = 4.0
 
 # initializes filter object
-filter_wheel = FilterWheel(OD_setting=OD_setting, verbose=True, COM_port=5)
+filter_wheel = FilterWheel(OD_setting=OD_setting, verbose=True, COM_port=27)
 
 #print(filter_wheel.table_attenuation)
 #print(filter_wheel.table_position_key)
 
 # sets filter to position 1
-#filter_wheel.reset_filter_wheel()
+filter_wheel.reset_filter_wheel()
 
 # sets a given attenuation
-#optimal_attenuation = 0.99
-#status = filter_wheel.set_wheel_attenuation(optimal_attenuation=optimal_attenuation, side_control='lower signal')
+optimal_attenuation = 0.99
+status = filter_wheel.set_wheel_attenuation(optimal_attenuation=optimal_attenuation, side_control='lower signal')
 
 
 

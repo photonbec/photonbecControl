@@ -15,12 +15,8 @@ import time
 if socket.gethostname() == "ph-photonbec5":
 	dll_device_manager=r'D:\Control\KCubeController\Thorlabs.MotionControl.DeviceManager.dll'
 	dll_KCube=r'D:\Control\KCubeController\Thorlabs.MotionControl.KCube.InertialMotor.dll'
-	serial_number=97000001
-elif socket.gethostname() == "ph-photonbec3":
-	dll_device_manager=r'D:\Control\KCubeController\Thorlabs.MotionControl.DeviceManager.dll'
-	dll_KCube=r'D:\Control\KCubeController\Thorlabs.MotionControl.KCube.InertialMotor.dll'
-	serial_number=97000001
-
+	#serial_number=97000001
+	serial_number=83854619
 
 class KCubeController():
 

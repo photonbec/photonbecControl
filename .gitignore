@@ -1,9 +1,5 @@
-.idea/*
-.vscode/*
 *.pyc
 *.pyd
-*.jpg
-*.png
 Experiments/
 *.exe
 spectrometer/avs-spectro.dll

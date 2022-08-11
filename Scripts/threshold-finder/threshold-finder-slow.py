@@ -17,7 +17,7 @@ def logB(A, base):
 def my_logspace(start, end, step, base=10): #numpy.logspace is coded in a way not helpful to us
 	return logspace(logB(start, base), logB(end, base), step, base=base)
 
-cavity_center = None #(456, 723) #None #for auto finding
+cavity_center = (456, 723) #None #for auto finding
 p_large_range = my_logspace(100, 2200, 16)
 p_small_range_rel = linspace(-0.3, 0.3, 9)
 
@@ -25,9 +25,8 @@ camera_label = 'chameleon'
 colour_weights = (1, 1, 1)
 debug_graphs = False
 bec_region_radius = 35e-6 * 4 / pbece.camera_pixel_size_map[camera_label]
-#size of bec ~35um, magnification 4
-
-print('bec region radius = ' + str(bec_region_radius) + 'px')
+ #size of bec ~35um, magnification 4
+print 'bec region radius = ' + str(bec_region_radius) + 'px'
 
 def cam_get_image(cam, max_attempts=5):
 	im = None
@@ -47,15 +46,15 @@ def take_power_ground_state_data(power_range, imshape):
 	dist_im = sqrt((cavity_center[1] - ww)**2 + (cavity_center[0] - hh)**2)
 	image_apature = dist_im < bec_region_radius
 
-	print('taking background')
+	print 'taking background'
 	SingleChannelAO.SetAO0(1.05)
 	
 	ims = []
 	p0i = []
 	for power_mW in power_range:
-		print('setting power to ' + str(power_mW) + 'mW')
+		print 'setting power to ' + str(power_mW) + 'mW'
 		pbec_ipc.ipc_eval('guiSetPowerAndWait(' + str(int(power_mW)) + ')', 'laser_controller')
-		print('obtaining autoexposed image')
+		print 'obtaining autoexposed image'
 		im, meta = autoexposure.get_single_autoexposed_image(camera_label, interesting_colours = colour_weights)
 		ims.append(im.copy())
 		
@@ -72,8 +71,8 @@ def take_power_ground_state_data(power_range, imshape):
 		area = 2*pi*bec_region_radius**2
 		intensity = power / area / meta['shutter'] * 10**(-meta['gain']/20.0)
 		p0i.append((power_mW, intensity))
-		print('output = ' + str(power) + 'counts shutter=' + str(meta['shutter']) + 'msec gain=' + str(meta['gain']) + 'dB')
-		print('intensity = ' + str(intensity))
+		print 'output = ' + str(power) + 'counts shutter=' + str(meta['shutter']) + 'msec gain=' + str(meta['gain']) + 'dB'
+		print 'intensity = ' + str(intensity)
 
 	return p0i, ims
 	
@@ -85,7 +84,7 @@ def save_power_ground_state_data(p0i, images, power_range):
 	experiment.dataset['images'] = pbeca.InterferometerFringeData(experiment.ts, '_images.zip')
 	experiment.dataset['images'].setData(images)
 	experiment.saveAllData()
-	print('saved data to timestamp ' + ts)
+	print 'saved data to timestamp ' + ts
 
 
 #p0i = [(5.0, 0.0031163973005996428), (84.5, 0.0031992799398992545), (164.0, 0.0032627914307371145), (243.5, 0.0033339220003762563), (323.0, 0.0034282548213083607), (402.5, 0.0035225948300506554), (482.0, 0.0036758605067296604), (561.5, 0.0040040650593229808), (641.0, 0.17738642475955407), (720.5, 0.3902215870681206), (800.0, 0.597061794768036)]
@@ -106,7 +105,7 @@ def fit_power_ground_state_find_pth(p0i, pth_guess=500):
 	guess = (pth_guess, 1e-6, 3e-3, -1.5) 
 	(fit_pars, dump) = leastsq(ground_state_power_residuals, guess, (p, i))
 	pth, alpha, a, b = fit_pars
-	print(zip(('pth', 'alpha', 'a', 'b'), fit_pars))
+	print zip(('pth', 'alpha', 'a', 'b'), fit_pars)
 	return pth, fit_pars
 	
 def plot_power_ground_state_data(p0i, fit_pars, pth):
@@ -146,11 +145,11 @@ finally:
 		cam.close()
 im = colour_to_monochrome(im)
 if not cavity_center:
-	print('obtained image, fitting')
+	print 'obtained image, fitting'
 	fit_pars, gauss_fun = fit_gaussian_to_image(im) #allows angle to change, which probably wont happen for us
 	x0_fit, y0_fit, sxp_fit, syp_fit, tan_theta_fit, offset_fit, amplitude_fit = fit_pars
 	cavity_center = (int(x0_fit), int(y0_fit))
-	print('center of cavity ' + str(cavity_center))
+	print 'center of cavity ' + str(cavity_center)
 	sys.exit(0)
 	
 if debug_graphs:
@@ -163,7 +162,7 @@ if debug_graphs:
 	plot([pixelX + bec_region_radius, pixelX - bec_region_radius], [pixelY - bec_region_radius, pixelY + bec_region_radius], 'w-')
 	xlim(0, im.shape[1]), ylim(0, im.shape[0])
 	
-print('finding first estimate of pth, powers=' + str(p_large_range))
+print 'finding first estimate of pth, powers=' + str(p_large_range)
 first_power_intensity, images = take_power_ground_state_data(p_large_range, im.shape)
 save_power_ground_state_data(first_power_intensity, images, p_large_range)
 
@@ -173,10 +172,10 @@ for i, imm in enumerate(images):
 	imshow(imm)
 pth_first, fit_pars = fit_power_ground_state_find_pth(first_power_intensity)
 plot_power_ground_state_data(first_power_intensity, fit_pars, pth_first)
-print('first pth = ' + str(pth_first))
+print 'first pth = ' + str(pth_first)
 
 p_small_range = pth_first + p_small_range_rel*pth_first
-print('taking data at powers ' + str(list(p_small_range)))
+print 'taking data at powers ' + str(list(p_small_range))
 second_power_intensity, images = take_power_ground_state_data(p_small_range, im.shape)
 save_power_ground_state_data(second_power_intensity, images, p_small_range)
 figure('second images'), clf()
@@ -187,7 +186,7 @@ for i, imm in enumerate(images):
 pth_second, fit_pars = fit_power_ground_state_find_pth(second_power_intensity, pth_first)
 plot_power_ground_state_data(second_power_intensity, fit_pars, pth_second)
 
-print('second pth = ' + str(pth_second))
+print 'second pth = ' + str(pth_second)
 
 #background subtraction
 #make work with AOM
